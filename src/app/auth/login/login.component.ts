@@ -1,8 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 
-import { AuthService } from './../../core/services/auth/auth.service';
+import { AuthService } from 'src/app/core/services/auth/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -17,9 +18,11 @@ export class LoginComponent implements OnInit {
     const password = this.loginForm.value.password as string;
 
     this.authService.login(email, password).subscribe({
-      next: (creds) => {}, // TO DO: Ir para home quando logar
+      next: (creds) => {
+        // TODO: Verificar o bug do clique
+        console.log("foi")
+      },
       error: (err) => {
-        /* this.snackBar.open(err.code, ); */
         let message = 'Ocorreu um erro';
 
         switch(err.code) {
@@ -41,7 +44,8 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private router: Router
   ) {}
 
   ngOnInit(): void {}

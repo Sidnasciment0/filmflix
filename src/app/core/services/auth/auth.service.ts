@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Auth } from '@angular/fire/auth';
-import { Firestore } from '@angular/fire/firestore';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
-import { collection, doc, setDoc } from 'firebase/firestore';
+import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from '@angular/fire/auth';
+import { Firestore, collection, doc, setDoc } from '@angular/fire/firestore';
+import { updateDoc } from '@firebase/firestore';
+/* import {  } from 'firebase/auth'; */
 import { user } from 'rxfire/auth';
 import { docData } from 'rxfire/firestore';
 import { from, map, of, switchMap, tap } from 'rxjs';
@@ -13,7 +13,6 @@ import { User } from './../../models/user';
   providedIn: 'root'
 })
 export class AuthService {
-
   constructor(private auth: Auth, private db: Firestore) { }
 
   login(email: string, password: string){
@@ -36,19 +35,36 @@ export class AuthService {
   }
 
   get user() {
-    return user(this.auth).pipe(switchMap((user) => {
-      if (user) {
-        return this.getUserData(user.uid);
-      }
-      return of(undefined);
-    })
-    )
+    return user(this.auth).pipe(
+      switchMap((user) => {
+        if (user) {
+          return this.getUserData(user.uid);
+        }
+        return of(undefined);
+      })
+    );
   }
 
   private getUserData(uid: string) {
     const users = collection(this.db, 'users');
     const userDoc = doc(users, uid);
 
-    return docData(userDoc).pipe(map((data) => data as User));
+    return docData(userDoc).pipe(
+      map(
+        (data) => ({...data, birthdate: data['birthdate'].toDate
+         ()} as User)
+      )
+    );
+  }
+
+  update(user: User) {
+    const users = collection(this.db, 'users');
+    const userDoc = doc(users, user.uid);
+
+    return from(updateDoc(userDoc, user as any));
+  }
+
+  logout() {
+    this.auth.signOut();
   }
 }
