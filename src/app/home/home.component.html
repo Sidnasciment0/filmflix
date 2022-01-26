@@ -1,6 +1,6 @@
 <div class="grid" *ngIf="trending$ | async as results">
   <mat-grid-list cols="6" rowHeight="3:4" gutterSize="8" class="results">
-    <h2 class="mat-h2">Têndencias</h2>
+    <h2 class="mat-h2">Tendências</h2>
     <a
       routerLink="{{ result.media_type }}/{{ result.id }}"
       *ngFor="let result of results"
