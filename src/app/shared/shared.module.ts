@@ -16,6 +16,7 @@ import { SspPipe } from './pipes/ssp/ssp.pipe';
     MaterialModule
   ],
   exports: [
+    MaterialModule,
     SspPipe
   ]
 })

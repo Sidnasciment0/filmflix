@@ -1,8 +1,9 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { debounceTime, distinctUntilChanged, filter, fromEvent, Observable, tap } from 'rxjs';
 
-import { TmdbApiTmdbApiService } from '../core/services/tmdb-api-tmdb-api.service';
+import { TmdbApiService } from '../core/services/tmdb-api/tmdb-api.service';
 import { MovieTvBase } from './../core/models/movie-tv-base';
+
 
 @Component({
   selector: 'app-home',
@@ -25,7 +26,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   @ViewChild('searchInput') searchInput!: ElementRef;
 
-  constructor(private tmdbApi: TmdbApiTmdbApiService) { }
+  constructor(private tmdbApi: TmdbApiService) { }
 
   ngAfterViewInit(): void {
     fromEvent(this.searchInput.nativeElement, 'keyup')
